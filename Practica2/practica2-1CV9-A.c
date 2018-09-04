@@ -10,16 +10,17 @@ Escamilla Sanchez Alejandro
 PROFESOR: BENJAMÍN LUNA BENOSO
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 PRÁCTICA NUMERO: 2
-TITULO: Inciso A.
+TITULO: Inciso A. Conversion de una operacion en 
+notación interfija a postfija.
 
 FECHA: 03/09/2018
 
 */
 
-#include "Pila.h"
+#include "../Practica1/Pila.h"
 
 //PROTOTIPOS DE FUNCIONES
-void menu(FILE *pf, COLA Q);
+void menu(FILE *pf, PILA *P);
 void convertirOperacion(FILE *pf, PILA *P);
 int preced(char op1, char op2);
 
@@ -72,7 +73,7 @@ void menu(FILE *pf, PILA *P)
 			while (car2=='Y' || car2=='y')
 			{
 				convertirOperacion(pf, P);
-				printf("\n\nDesea calcular otro? Y/N: ");
+				printf("\n\nDesea convertir otro? Y/N: ");
 				scanf("%c", &car2);
 				fflush(stdin);
 			}
@@ -91,8 +92,8 @@ void convertirOperacion(FILE *pf, PILA *P)
 {
 	PILA N;
 	PILA N2;
-	char simb;
-	int simb2, simbCima; 
+	char simb, aux;
+	int simb2; 
 	CrearPila(&N);
 	CrearPila(&N2);
 	while(simb!='\n')
@@ -103,25 +104,69 @@ void convertirOperacion(FILE *pf, PILA *P)
 		if(simb>=48 && simb<=57)
 		{
 			fputc(simb, pf);
-			simb2 = simb - '0';
-			InsertaPila(&N, simb2);
+			//simb2 = simb - '0';
+			InsertaPila(P, simb);
+			//printf("%c", simb);
 		}
 		else
 		{
 			if((simb=='*') || (simb=='/') || (simb=='+') || (simb=='-') || (simb=='^'))
 			{
-				while(!PilaVacia() &&)
+				if(PilaVacia(*P))
 				{
-				
+					printf("*****ERROR. No se puede iniciar con operador.*****");
+				}
+				else
+				{
+					if(PilaVacia(N))
+					{
+						InsertaPila(&N, simb);
+						fprintf(pf, "%c", simb);
+					}
+					else
+					{
+						//printf("%c, %c", CimaPila(N), simb);
+						while(!PilaVacia(N) && preced(CimaPila(N), simb))
+						{
+							simb2 = QuitaCima(&N);
+							//printf("%c", simb);
+							InsertaPila(P, simb2);
+						}
+						fprintf(pf, "%c", simb);
+						InsertaPila(&N, simb);
+					}
 				}
 			}
 			else
 			{
-				printf("*****ERROR. Simbolo no valido*****");
+				if(simb!='\n')
+					printf("*****ERROR. Simbolo no valido*****");
 			}
 		}
 	}
-	LimpiaPila(*N);
+	while(!PilaVacia(N))
+	{
+		//printf("aqui");
+		simb2 = QuitaCima(&N);
+		//printf("%c ", simb2);
+		InsertaPila(P, simb2);
+	}
+	while(!PilaVacia(*P))
+	{
+		//printf("aca");
+		simb2 = QuitaCima(P);
+		//printf("%c ", simb2);
+		InsertaPila(&N2, simb2);
+	}
+	printf("\nLa cadena convertida es: ");
+	fprintf(pf, "=");
+	while(!PilaVacia(N2))
+	{
+		aux = QuitaCima(&N2);
+		printf("%c", aux);
+		fprintf(pf, "%c", aux);
+	}
+	fprintf(pf, "\n");
 }
 
 //FUNCION QUE REVISA LA PRECEDENCIA DE OPERADORES (op1 es cima y op2 es el que se ingresa) 
@@ -172,7 +217,8 @@ int preced(char op1, char op2)
 				return 1;
 			}
 		break;
-		default
+		default:
+			return 0;	
 		break;
 	}
 }
