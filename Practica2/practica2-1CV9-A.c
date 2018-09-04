@@ -90,8 +90,9 @@ void menu(FILE *pf, PILA *P)
 //FUNCION QUE CONVIERTE LA OPERACION A NOTACION POSTFIJA
 void convertirOperacion(FILE *pf, PILA *P)
 {
-	PILA N;
-	PILA N2;
+	//PILA P ES "CADENA POSTFIJA"
+	PILA N; //PILA PARA GUARDAR LOS OPERADORES
+	PILA N2; //PILA QUE RECIBE A P EN ORDEN INVERSO PARA IMPRIMIR
 	char simb, aux;
 	int simb2; 
 	CrearPila(&N);
@@ -101,7 +102,7 @@ void convertirOperacion(FILE *pf, PILA *P)
 		printf("\n-Ingresa un caracter: ");
 		simb = getchar();
 		fflush(stdin);
-		if(simb>=48 && simb<=57)
+		if(simb>=48 && simb<=57) //REVISANDO SI ES UN OPERANDO
 		{
 			fputc(simb, pf);
 			//simb2 = simb - '0';
@@ -110,6 +111,7 @@ void convertirOperacion(FILE *pf, PILA *P)
 		}
 		else
 		{
+			//REVISANDO SI ES UN OPERADOR
 			if((simb=='*') || (simb=='/') || (simb=='+') || (simb=='-') || (simb=='^'))
 			{
 				if(PilaVacia(*P))
@@ -158,6 +160,7 @@ void convertirOperacion(FILE *pf, PILA *P)
 		//printf("%c ", simb2);
 		InsertaPila(&N2, simb2);
 	}
+	//IMPRIMIENDO A ARCHIVO Y EN PANTALLA
 	printf("\nLa cadena convertida es: ");
 	fprintf(pf, "=");
 	while(!PilaVacia(N2))
@@ -175,7 +178,7 @@ int preced(char op1, char op2)
 	switch(op1)
 	{
 		case '^':
-			return 1;
+			return 1; //PRECEDENCIA MÁXIMA
 		break;
 		case '*':
 			if(op2=='^')
