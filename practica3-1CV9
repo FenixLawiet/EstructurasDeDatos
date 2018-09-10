@@ -1,0 +1,151 @@
+/*
+INSTITUTO POLITÉCNICO NACIONAL
+ESCUELA SUPERIOR DE CÓMPUTO
+ESTRUCTURAS DE DATOS
+GRUPO: 1CV9
+ALUMNOS:
+Pérez Bravo Isaac Ulises 
+Escamilla Sanchez Alejandro
+ 
+PROFESOR: BENJAMÍN LUNA BENOSO
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+PRÁCTICA NUMERO: 3
+TITULO: Round Robin
+FECHA: 10/09/2018
+*/
+
+#include "Cola.h"
+
+//PROTOTIPO DE LAS FUNCIONES
+void menu(COLA *Q, PROCESO *p);
+void cantidadProcesos(COLA *Q, PROCESO *p);
+void tablaProcesos(COLA *Q, PROCESO *p);
+void emulaPaso(COLA *Q, PROCESO *p);
+void emulaCompleto(COLA *Q, PROCESO *p);
+
+//NOTA: QUANTUM TENDRÁ VALOR ENTRE 3 Y 5
+int main(void)
+{
+	COLA Q;
+	PROCESO *prop1;
+	CrearCola(&Q);
+	menu(&Q, prop1);
+	return 0;
+}
+
+//FUNCIÓN QUE DESPLIEGA UN MENU PARA UN USUARIO
+void menu(COLA *Q, PROCESO *p)
+{
+	char car1 = '0';
+	char car2 = 'Y';
+	do{
+		system("CLS");
+		puts("-------------------------------------------------------------------------");
+		printf("Instrucciones:\n");
+		printf("Este programa planifica procesos que lleva a cabo el CPU, "); 
+		printf("está diseñado especialmente para sistemas de tiempo compartido. Se define un");
+		printf("intervalo de tiempo denominado Quantum, cuya duración varía según el sistema.\n ");
+		printf("La cola de procesos se estructura como una cola circular. El planificador la ");
+		printf("recorre asignando un cuanto de tiempo a cada proceso..\n"); 
+		printf("Para iniciar, se ingresa el número de procesos");
+		puts("-------------------------------------------------------------------------");
+		puts("Menu:");
+		puts("1. Cantidad de Procesos.");
+		puts("2. Mostrar tabla de los procesos.");
+		puts("3. Emular paso a paso.");
+		puts("4. Emular completo");
+		puts("5. Salir");
+		printf("*Ingrese opcion: ");
+		scanf("%c", &car1);
+		fflush(stdin);
+	}while(car1!='1' && car1!='2' && car1!='3' && car1!='4' && car1!='5');
+	switch(car1)
+	{
+		case '1':
+			while (car2=='Y' || car2=='y')
+			{
+				cantidadProcesos(&Q, &p);
+				printf("\n\nDesea realizar otro? Y/N: ");
+				scanf("%c", &car2);
+				fflush(stdin);
+			}
+			printf("Gracias por usar este programa.\n");	
+		break;
+		case '2':
+			while (car2=='Y' || car2=='y')
+			{
+				tablaProcesos(&Q, &p);
+				printf("\n\nDesea realizar otro? Y/N: ");
+				scanf("%c", &car2);
+				fflush(stdin);
+			}
+			printf("Gracias por usar este programa.\n");	
+		break;
+		case '3':
+			while (car2=='Y' || car2=='y')
+			{
+				emulaPaso(&Q, &p);
+				printf("\n\nDesea realizar otro? Y/N: ");
+				scanf("%c", &car2);
+				fflush(stdin);
+			}
+			printf("Gracias por usar este programa.\n");	
+		break;
+		case '4':
+			while (car2=='Y' || car2=='y')
+			{
+				emulaCompleto(&Q, &p);
+				printf("\n\nDesea realizar otro? Y/N: ");
+				scanf("%c", &car2);
+				fflush(stdin);
+			}
+			printf("Gracias por usar este programa.\n");	
+		break;
+		case '5':
+			printf("Gracias por usar este programa.\n");
+			
+			exit(0);
+	}	
+}
+
+
+
+void cantidadProcesos(COLA *Q, PROCESO *p)
+{
+	int quantum = (rand()%3)+3;
+	int numProc,i;
+	
+	printf("\n*Ingresa el número de procesos: ");
+	scanf("%d", &numProc);
+	fflush(stdin);
+	for(i=0; i<numProc; i++)
+	{	
+		p->nombreProceso[i] = 65+i;
+		p->tiempoLlegada=i;
+		p->requerimiento=(rand()%20)+1;
+		InsertarCola(&Q, *p);
+	}
+	printf("\n******SUS PROCESOS HAN SIDO ASIGNADOS******\n");
+	while(!ColaVacia(*Q))
+	{
+		PROCESO aux=QuitarFrente(&Q);
+		printf("%s\n", aux.nombreProceso);
+		printf("%d\n", aux.tiempoLlegada);
+		printf("%d\n", aux.requerimiento);
+	}
+}
+
+void tablaProcesos(COLA *Q, PROCESO *p)
+{
+
+}
+
+void emulaPaso(COLA *Q, PROCESO *p)
+{
+
+}
+
+void emulaCompleto(COLA *Q, PROCESO *p)
+{
+
+}
